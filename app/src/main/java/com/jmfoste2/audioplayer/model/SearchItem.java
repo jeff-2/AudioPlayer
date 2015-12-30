@@ -16,7 +16,8 @@ import org.joda.time.format.PeriodFormatter;
 public class SearchItem implements Parcelable {
 
     private static final PeriodFormatter RAW_DURATION_FORMAT = ISOPeriodFormat.standard();
-    private static final String BASE_AUDIO_URL = "http://youtubeinmp3.com/fetch/?video=http://www.youtube.com/watch?v=";
+    private static final String BASE_AUDIO_URL = "https://murmuring-stream-1197.herokuapp.com/audio/";
+    //"http://youtubeinmp3.com/fetch/?video=http://www.youtube.com/watch?v=";
 
     private final String videoId;
     private final String title;
