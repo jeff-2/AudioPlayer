@@ -13,11 +13,10 @@ import org.joda.time.format.PeriodFormatter;
  * for videos on youtube. The data stored is the id, title,
  * description, url for the thumbnail, and duration of the video.
  */
-public class SearchItem implements Parcelable {
+public class SearchItem implements Parcelable, Comparable<SearchItem> {
 
     private static final PeriodFormatter RAW_DURATION_FORMAT = ISOPeriodFormat.standard();
     private static final String BASE_AUDIO_URL = "https://murmuring-stream-1197.herokuapp.com/audio/";
-    //"http://youtubeinmp3.com/fetch/?video=http://www.youtube.com/watch?v=";
 
     private final String videoId;
     private final String title;
@@ -286,5 +285,10 @@ public class SearchItem implements Parcelable {
         dest.writeString(thumbnailURL);
         dest.writeString(duration);
         dest.writeInt(isFavorite ? 1 : 0);
+    }
+
+    @Override
+    public int compareTo(SearchItem another) {
+        return title.compareTo(another.title);
     }
 }

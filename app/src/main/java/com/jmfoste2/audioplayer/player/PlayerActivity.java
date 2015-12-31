@@ -60,6 +60,7 @@ public class PlayerActivity extends Activity implements AudioService.OnStateChan
     private ImageView favorite;
     private ImageView next;
     private ImageView prev;
+    private ImageView shuffle;
 
     private ProgressDialog progressDialog;
 
@@ -108,6 +109,8 @@ public class PlayerActivity extends Activity implements AudioService.OnStateChan
         favorite = (ImageView) findViewById(R.id.favorite);
         favorite.setOnClickListener(favoriteListener);
 
+        shuffle = (ImageView) findViewById(R.id.shuffle);
+
         if (playlist.current().isFavorite()) {
             favorite.setImageResource(R.drawable.ic_favorite_selected_light);
         } else {
@@ -126,6 +129,12 @@ public class PlayerActivity extends Activity implements AudioService.OnStateChan
             prev.setOnClickListener(prevListener);
         } else {
             prev.setVisibility(View.GONE);
+        }
+
+        if (playlist.hasNext() || playlist.hasPrev()) {
+            shuffle.setOnClickListener(shuffleListener);
+        } else {
+            shuffle.setVisibility(View.GONE);
         }
     }
 
@@ -275,6 +284,12 @@ public class PlayerActivity extends Activity implements AudioService.OnStateChan
             seekBar.setProgress(0);
         } else {
             seekBar.setProgress(service.getCurrentPosition() / 1000);
+        }
+
+        if (service.isShuffleEnabled()) {
+            shuffle.setImageResource(R.drawable.ic_shuffle_selected_light);
+        } else {
+            shuffle.setImageResource(R.drawable.ic_shuffle_light);
         }
     }
 
@@ -436,6 +451,22 @@ public class PlayerActivity extends Activity implements AudioService.OnStateChan
                         break;
                     default:
                         break;
+                }
+            }
+        }
+    };
+
+    private final View.OnClickListener shuffleListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (bound) {
+                Log.d(TAG, "Toggled shuffle");
+                boolean shuffleEnabled = !service.isShuffleEnabled();
+                service.setShuffleEnabled(shuffleEnabled);
+                if (shuffleEnabled) {
+                    shuffle.setImageResource(R.drawable.ic_shuffle_selected_light);
+                } else {
+                    shuffle.setImageResource(R.drawable.ic_shuffle_light);
                 }
             }
         }

@@ -330,6 +330,14 @@ public class AudioService extends Service implements MediaPlayer.OnErrorListener
         stopForeground(true);
     }
 
+    public boolean isShuffleEnabled() {
+        return playlist.isShuffleEnabled();
+    }
+
+    public void setShuffleEnabled(boolean shuffleEnabled) {
+        playlist.setShuffleEnabled(shuffleEnabled);
+    }
+
     public interface OnStateChangedListener {
         void onStateChanged(State state);
     }

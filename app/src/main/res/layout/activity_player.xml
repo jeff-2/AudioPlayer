@@ -90,6 +90,13 @@
                 android:src="@drawable/ic_repeat_light"/>
 
             <ImageView
+                android:id="@+id/shuffle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_shuffle_light"/>
+
+            <ImageView
                 android:id="@+id/next"
                 android:layout_width="0dp"
                 android:layout_weight="1"

@@ -2,9 +2,12 @@ package com.jmfoste2.audioplayer.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Used to represent a playlist of search items. Contains a unique
@@ -15,6 +18,7 @@ public class Playlist implements Parcelable {
     private final String title;
     private final List<SearchItem> entries;
     private int currentEntryPosition;
+    private boolean shuffleEnabled;
 
     /**
      * Constructs a playlist with the specified title and entries.
@@ -26,6 +30,7 @@ public class Playlist implements Parcelable {
         this.title = title;
         this.entries = entries;
         currentEntryPosition = 0;
+        shuffleEnabled = false;
     }
 
     public String getTitle() {
@@ -34,6 +39,26 @@ public class Playlist implements Parcelable {
 
     public List<SearchItem> getEntries() {
         return entries;
+    }
+
+    public boolean isShuffleEnabled() {
+        return shuffleEnabled;
+    }
+
+    public void setShuffleEnabled(boolean shuffleEnabled) {
+        SearchItem currentItem = entries.get(currentEntryPosition);
+        if (shuffleEnabled) {
+            Collections.shuffle(entries, new Random(System.currentTimeMillis()));
+        } else {
+            Collections.sort(entries);
+        }
+        for (int i = 0; i < entries.size(); i++) {
+            if (currentItem.equals(entries.get(i))) {
+                currentEntryPosition = i;
+                break;
+            }
+        }
+        this.shuffleEnabled = shuffleEnabled;
     }
 
     /**
@@ -128,6 +153,7 @@ public class Playlist implements Parcelable {
                 "title='" + title + '\'' +
                 ", entries=" + entries +
                 ", currentEntryPosition=" + currentEntryPosition +
+                ", shuffleEnabled=" + shuffleEnabled +
                 '}';
     }
 
@@ -156,6 +182,7 @@ public class Playlist implements Parcelable {
         entries = new ArrayList<>();
         in.readTypedList(entries, SearchItem.CREATOR);
         currentEntryPosition = in.readInt();
+        shuffleEnabled = in.readInt() == 1 ? true : false;
     }
 
     @Override
@@ -168,5 +195,6 @@ public class Playlist implements Parcelable {
         dest.writeString(title);
         dest.writeTypedList(entries);
         dest.writeInt(currentEntryPosition);
+        dest.writeInt(shuffleEnabled ? 1 : 0);
     }
 }
