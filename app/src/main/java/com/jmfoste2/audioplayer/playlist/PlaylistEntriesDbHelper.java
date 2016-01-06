@@ -23,7 +23,7 @@ public class PlaylistEntriesDbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "PlaylistEntriesDbHelper";
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "PlaylistEntries.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -34,7 +34,8 @@ public class PlaylistEntriesDbHelper extends SQLiteOpenHelper {
                     PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_VIDEO_ID + TEXT_TYPE + COMMA_SEP +
                     PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
                     PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                    PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_THUMBNAIL_URL + TEXT_TYPE + COMMA_SEP +
+                    PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DEFAULT_THUMBNAIL_URL + TEXT_TYPE + COMMA_SEP +
+                    PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_HIGH_RES_THUMBNAIL_URL + TEXT_TYPE + COMMA_SEP +
                     PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DURATION + TEXT_TYPE + COMMA_SEP +
                     PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_PLAYLIST_TITLE + TEXT_TYPE + " )";
 
@@ -57,7 +58,10 @@ public class PlaylistEntriesDbHelper extends SQLiteOpenHelper {
     }
 
     // if db schema is later changed, implement this
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(SQL_CREATE_ENTRIES);
+    }
 
     // if db schema is later changed, implement this
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
@@ -76,7 +80,8 @@ public class PlaylistEntriesDbHelper extends SQLiteOpenHelper {
         values.put(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_VIDEO_ID, entry.getVideoId());
         values.put(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_TITLE, entry.getTitle());
         values.put(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DESCRIPTION, entry.getDescription());
-        values.put(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_THUMBNAIL_URL, entry.getThumbnailURL());
+        values.put(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DEFAULT_THUMBNAIL_URL, entry.getDefaultThumbnailURL());
+        values.put(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_HIGH_RES_THUMBNAIL_URL, entry.getHighResThumbnailURL());
         values.put(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DURATION, entry.getDuration());
         values.put(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_PLAYLIST_TITLE, playlist.getTitle());
 
@@ -133,7 +138,8 @@ public class PlaylistEntriesDbHelper extends SQLiteOpenHelper {
         int videoIdColumnIndex = cursor.getColumnIndex(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_VIDEO_ID);
         int titleColumnIndex = cursor.getColumnIndex(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_TITLE);
         int descriptionColumnIndex = cursor.getColumnIndex(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DESCRIPTION);
-        int thumbnailURLColumnIndex = cursor.getColumnIndex(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_THUMBNAIL_URL);
+        int defaultThumbnailURLColumnIndex = cursor.getColumnIndex(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DEFAULT_THUMBNAIL_URL);
+        int highResThumbnailURLColumnIndex = cursor.getColumnIndex(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_HIGH_RES_THUMBNAIL_URL);
         int durationColumnIndex = cursor.getColumnIndex(PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DURATION);
 
         // add each search item to our list
@@ -142,9 +148,10 @@ public class PlaylistEntriesDbHelper extends SQLiteOpenHelper {
             String videoId = cursor.getString(videoIdColumnIndex);
             String title = cursor.getString(titleColumnIndex);
             String description = cursor.getString(descriptionColumnIndex);
-            String thumbnailURL = cursor.getString(thumbnailURLColumnIndex);
+            String defaultThumbnailURL = cursor.getString(defaultThumbnailURLColumnIndex);
+            String highResThumbnailURL = cursor.getString(highResThumbnailURLColumnIndex);
             String duration = cursor.getString(durationColumnIndex);
-            SearchItem searchItem = new SearchItem(videoId, title, description, thumbnailURL, duration);
+            SearchItem searchItem = new SearchItem(videoId, title, description, defaultThumbnailURL, highResThumbnailURL, duration);
 
             playlistEntries.add(searchItem);
         }
@@ -166,7 +173,8 @@ public class PlaylistEntriesDbHelper extends SQLiteOpenHelper {
                 PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_VIDEO_ID,
                 PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_TITLE,
                 PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DESCRIPTION,
-                PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_THUMBNAIL_URL,
+                PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DEFAULT_THUMBNAIL_URL,
+                PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_HIGH_RES_THUMBNAIL_URL,
                 PlaylistEntriesContract.PlaylistEntry.COLUMN_NAME_DURATION
         };
 

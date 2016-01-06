@@ -22,6 +22,7 @@ import com.jmfoste2.audioplayer.favorite.FavoritesDbHelper;
 import com.jmfoste2.audioplayer.favorite.RemoveFavoriteTask;
 import com.jmfoste2.audioplayer.model.Playlist;
 import com.jmfoste2.audioplayer.model.SearchItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,6 +52,7 @@ public class PlayerActivity extends Activity implements AudioService.OnStateChan
     private Playlist playlist;
 
     // PlayerControls and dynamically displayed info
+    private ImageView background;
     private TextView title;
     private SeekBar seekBar;
     private ImageView pausePlay;
@@ -86,6 +88,9 @@ public class PlayerActivity extends Activity implements AudioService.OnStateChan
     private void handleIntent(Intent intent) {
 
         playlist = intent.getParcelableExtra(PLAYLIST);
+
+        background = (ImageView) findViewById(R.id.background_image);
+        Picasso.with(this).load(playlist.current().getHighResThumbnailURL()).fit().centerCrop().into(background);
 
         startText = (TextView) findViewById(R.id.startText);
         startText.setText(playlist.current().getFormattedStartDuration());
@@ -261,6 +266,8 @@ public class PlayerActivity extends Activity implements AudioService.OnStateChan
         endText.setText(endDuration);
         title.setText(current.getTitle());
         seekBar.setMax(current.getDurationInSeconds() - 1);
+
+        Picasso.with(this).load(current.getHighResThumbnailURL()).into(background);
 
         if (service.getState() == AudioService.State.STARTED) {
             pausePlay.setImageResource(R.drawable.ic_pause_light);

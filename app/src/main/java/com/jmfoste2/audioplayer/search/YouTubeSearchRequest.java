@@ -65,7 +65,7 @@ public class YouTubeSearchRequest {
         search.setKey(API_KEY);
         search.setQ(query);
         search.setType("video");
-        search.setFields("items(id/videoId,snippet/title,snippet/description,snippet/thumbnails/default/url)");
+        search.setFields("items(id/videoId,snippet/title,snippet/description,snippet/thumbnails/default/url,snippet/thumbnails/high/url)");
         search.setMaxResults(maxNumResults);
 
         SearchListResponse searchResponse = search.execute();
@@ -101,10 +101,11 @@ public class YouTubeSearchRequest {
                 String id = searchResult.getId().getVideoId();
                 String title = snippet.getTitle();
                 String description = snippet.getDescription();
-                String thumbnailURL = snippet.getThumbnails().getDefault().getUrl();
+                String defaultThumbnailURL = snippet.getThumbnails().getDefault().getUrl();
+                String highResThumbnailURL = snippet.getThumbnails().getHigh().getUrl();
                 String duration = videoResults.get(i).getContentDetails().getDuration();
 
-                searchItems.add(new SearchItem(id, title, description, thumbnailURL, duration));
+                searchItems.add(new SearchItem(id, title, description, defaultThumbnailURL, highResThumbnailURL, duration));
             }
         }
         return searchItems;

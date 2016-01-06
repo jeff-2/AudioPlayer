@@ -107,7 +107,7 @@ public class SearchItemArrayAdapter extends ArrayAdapter<SearchItem> {
 
         SearchItem searchItem = getItem(position);
         viewHolder.title.setText(searchItem.getTitle());
-        Picasso.with(getContext()).load(searchItem.getThumbnailURL()).into(viewHolder.thumbnail);
+        Picasso.with(getContext()).load(searchItem.getDefaultThumbnailURL()).into(viewHolder.thumbnail);
         viewHolder.duration.setText(searchItem.getFormattedDuration());
 
         return rowView;

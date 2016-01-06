@@ -19,7 +19,8 @@ public final class FavoritesContract {
         public static final String COLUMN_NAME_VIDEO_ID = "video_id";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_DESCRIPTION = "description";
-        public static final String COLUMN_NAME_THUMBNAIL_URL = "thumbnail_url";
+        public static final String COLUMN_NAME_DEFAULT_THUMBNAIL_URL = "default_thumbnail_url";
+        public static final String COLUMN_NAME_HIGH_RES_THUMBNAIL_URL = "high_res_thumbnail_url";
         public static final String COLUMN_NAME_DURATION = "duration";
     }
 }

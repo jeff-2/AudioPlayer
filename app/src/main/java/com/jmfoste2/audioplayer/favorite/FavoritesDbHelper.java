@@ -23,7 +23,7 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "FavoritesDbHelper";
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "Favorites.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -34,7 +34,8 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
                     FavoritesContract.Favorites.COLUMN_NAME_VIDEO_ID + TEXT_TYPE + COMMA_SEP +
                     FavoritesContract.Favorites.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
                     FavoritesContract.Favorites.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                    FavoritesContract.Favorites.COLUMN_NAME_THUMBNAIL_URL + TEXT_TYPE + COMMA_SEP +
+                    FavoritesContract.Favorites.COLUMN_NAME_DEFAULT_THUMBNAIL_URL + TEXT_TYPE + COMMA_SEP +
+                    FavoritesContract.Favorites.COLUMN_NAME_HIGH_RES_THUMBNAIL_URL + TEXT_TYPE + COMMA_SEP +
                     FavoritesContract.Favorites.COLUMN_NAME_DURATION + TEXT_TYPE + " )";
 
     // may be useful in the future
@@ -56,7 +57,10 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
     }
 
     // if db schema is later changed, implement this
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(SQL_CREATE_ENTRIES);
+    }
 
     // if db schema is later changed, implement this
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
@@ -74,7 +78,8 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
         values.put(FavoritesContract.Favorites.COLUMN_NAME_VIDEO_ID, favorite.getVideoId());
         values.put(FavoritesContract.Favorites.COLUMN_NAME_TITLE, favorite.getTitle());
         values.put(FavoritesContract.Favorites.COLUMN_NAME_DESCRIPTION, favorite.getDescription());
-        values.put(FavoritesContract.Favorites.COLUMN_NAME_THUMBNAIL_URL, favorite.getThumbnailURL());
+        values.put(FavoritesContract.Favorites.COLUMN_NAME_DEFAULT_THUMBNAIL_URL, favorite.getDefaultThumbnailURL());
+        values.put(FavoritesContract.Favorites.COLUMN_NAME_HIGH_RES_THUMBNAIL_URL, favorite.getHighResThumbnailURL());
         values.put(FavoritesContract.Favorites.COLUMN_NAME_DURATION, favorite.getDuration());
 
         long newRowId = db.insert(FavoritesContract.Favorites.TABLE_NAME, null, values);
@@ -128,7 +133,8 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
         int videoIdColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_NAME_VIDEO_ID);
         int titleColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_NAME_TITLE);
         int descriptionColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_NAME_DESCRIPTION);
-        int thumbnailURLColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_NAME_THUMBNAIL_URL);
+        int defaultThumbnailURLColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_NAME_DEFAULT_THUMBNAIL_URL);
+        int highResThumbnailURLColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_NAME_HIGH_RES_THUMBNAIL_URL);
         int durationColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_NAME_DURATION);
 
         // add each search item to our list
@@ -137,9 +143,10 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
             String videoId = cursor.getString(videoIdColumnIndex);
             String title = cursor.getString(titleColumnIndex);
             String description = cursor.getString(descriptionColumnIndex);
-            String thumbnailURL = cursor.getString(thumbnailURLColumnIndex);
+            String defaultThumbnailURL = cursor.getString(defaultThumbnailURLColumnIndex);
+            String highResThumbnailURL = cursor.getString(highResThumbnailURLColumnIndex);
             String duration = cursor.getString(durationColumnIndex);
-            SearchItem searchItem = new SearchItem(videoId, title, description, thumbnailURL, duration);
+            SearchItem searchItem = new SearchItem(videoId, title, description, defaultThumbnailURL, highResThumbnailURL, duration);
 
             favorites.add(searchItem);
         }
@@ -160,7 +167,8 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
                 FavoritesContract.Favorites.COLUMN_NAME_VIDEO_ID,
                 FavoritesContract.Favorites.COLUMN_NAME_TITLE,
                 FavoritesContract.Favorites.COLUMN_NAME_DESCRIPTION,
-                FavoritesContract.Favorites.COLUMN_NAME_THUMBNAIL_URL,
+                FavoritesContract.Favorites.COLUMN_NAME_DEFAULT_THUMBNAIL_URL,
+                FavoritesContract.Favorites.COLUMN_NAME_HIGH_RES_THUMBNAIL_URL,
                 FavoritesContract.Favorites.COLUMN_NAME_DURATION
         };
 

@@ -21,7 +21,8 @@ public class SearchItem implements Parcelable, Comparable<SearchItem> {
     private final String videoId;
     private final String title;
     private final String description;
-    private final String thumbnailURL;
+    private final String defaultThumbnailURL;
+    private final String highResThumbnailURL;
     private final String duration;
     private boolean isFavorite;
 
@@ -31,14 +32,16 @@ public class SearchItem implements Parcelable, Comparable<SearchItem> {
      * @param videoId The id of the video
      * @param title The title of the video
      * @param description The description of the video
-     * @param thumbnailURL The url of the thumbnail for the video
+     * @param defaultThumbnailURL The url of the default thumbnail for the video
+     * @param highResThumbnailURL The url of the high res thumbnail for the video
      * @param duration The duration of the video
      */
-    public SearchItem(String videoId, String title, String description, String thumbnailURL, String duration) {
+    public SearchItem(String videoId, String title, String description, String defaultThumbnailURL, String highResThumbnailURL, String duration) {
         this.videoId = videoId;
         this.title = title;
         this.description = description;
-        this.thumbnailURL = thumbnailURL;
+        this.defaultThumbnailURL = defaultThumbnailURL;
+        this.highResThumbnailURL = highResThumbnailURL;
         this.duration = duration;
         isFavorite = false;
     }
@@ -55,8 +58,12 @@ public class SearchItem implements Parcelable, Comparable<SearchItem> {
         return description;
     }
 
-    public String getThumbnailURL() {
-        return thumbnailURL;
+    public String getDefaultThumbnailURL() {
+        return defaultThumbnailURL;
+    }
+
+    public String getHighResThumbnailURL() {
+        return highResThumbnailURL;
     }
 
     public String getDuration() {
@@ -217,7 +224,8 @@ public class SearchItem implements Parcelable, Comparable<SearchItem> {
         if (!description.equals(that.description)) return false;
         if (!duration.equals(that.duration)) return false;
         if (isFavorite != that.isFavorite) return false;
-        return thumbnailURL.equals(that.thumbnailURL);
+        if (!defaultThumbnailURL.equals(that.defaultThumbnailURL)) return false;
+        return highResThumbnailURL.equals(that.highResThumbnailURL);
     }
 
     @Override
@@ -225,7 +233,8 @@ public class SearchItem implements Parcelable, Comparable<SearchItem> {
         int result = videoId.hashCode();
         result = 31 * result + title.hashCode();
         result = 31 * result + description.hashCode();
-        result = 31 * result + thumbnailURL.hashCode();
+        result = 31 * result + defaultThumbnailURL.hashCode();
+        result = 31 * result + highResThumbnailURL.hashCode();
         result = 31 * result + duration.hashCode();
         result = 31 * result + (isFavorite ? 1 : 0);
         return result;
@@ -237,7 +246,8 @@ public class SearchItem implements Parcelable, Comparable<SearchItem> {
                 "videoId='" + videoId + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", thumbnailURL='" + thumbnailURL + '\'' +
+                ", defaultThumbnailURL='" + defaultThumbnailURL + '\'' +
+                ", highResThumbnailURL='" + highResThumbnailURL + '\'' +
                 ", duration='" + duration + '\'' +
                 ", isFavorite='" + isFavorite + '\'' +
                 '}';
@@ -267,7 +277,8 @@ public class SearchItem implements Parcelable, Comparable<SearchItem> {
         videoId = in.readString();
         title = in.readString();
         description = in.readString();
-        thumbnailURL = in.readString();
+        defaultThumbnailURL = in.readString();
+        highResThumbnailURL = in.readString();
         duration = in.readString();
         isFavorite = in.readInt() == 1 ? true : false;
     }
@@ -282,7 +293,8 @@ public class SearchItem implements Parcelable, Comparable<SearchItem> {
         dest.writeString(videoId);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeString(thumbnailURL);
+        dest.writeString(defaultThumbnailURL);
+        dest.writeString(highResThumbnailURL);
         dest.writeString(duration);
         dest.writeInt(isFavorite ? 1 : 0);
     }
