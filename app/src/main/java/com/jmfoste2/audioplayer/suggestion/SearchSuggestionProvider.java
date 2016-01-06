@@ -46,6 +46,7 @@ public class SearchSuggestionProvider extends SearchRecentSuggestionsProvider {
                 }
             } catch (IOException e) {
                 Log.d(TAG, "IOException", e);
+                return null;
             }
 
             return cursor;
