@@ -112,7 +112,13 @@ public class PlaylistsActivity extends ListActivity implements AdapterView.OnIte
         protected List<Playlist> doInBackground(Void... params) {
             PlaylistsDbHelper dbHelper = new PlaylistsDbHelper(PlaylistsActivity.this);
             List<Playlist> playlists = dbHelper.getAllPlaylists();
-            Log.d(TAG, "Got playlists:" + playlists);
+            String playlistString = playlists.toString();
+            Log.d(TAG, "Playlists:");
+            int i;
+            for (i = 0; i < playlistString.length() / 4000; i++) {
+                Log.d(TAG, playlistString.substring(4000 * i, 4000 * i + 4000));
+            }
+            Log.d(TAG, playlistString.substring(4000 * i));
             return playlists;
         }
     }

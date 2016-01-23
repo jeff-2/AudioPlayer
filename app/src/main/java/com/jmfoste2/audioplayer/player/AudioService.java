@@ -93,7 +93,6 @@ public class AudioService extends Service implements MediaPlayer.OnErrorListener
      * Initializes media player, or resets it if it already exists.
      */
     private void initializePlayer() {
-
         boolean isLooping = false;
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
@@ -109,7 +108,6 @@ public class AudioService extends Service implements MediaPlayer.OnErrorListener
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
         try {
             mediaPlayer.setDataSource(playlist.current().getAudioURL());
             state = State.INITIALIZED;
@@ -119,8 +117,10 @@ public class AudioService extends Service implements MediaPlayer.OnErrorListener
             onStateChanged();
         } catch (IOException e) {
             Log.d(TAG, "IOException", e);
+            // TODO:
         }
     }
+
 
     private final IBinder binder = new LocalBinder();
 
@@ -154,7 +154,7 @@ public class AudioService extends Service implements MediaPlayer.OnErrorListener
         registerReceiver(broadcastReceiver, intentFilter);
 
         wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
-                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "com.jmfoste2.audioplayer.player.AudioService:WifiLock");
         wifiLock.acquire();
         return Service.START_STICKY;
     }
